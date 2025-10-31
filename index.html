@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Untitled</title>
+    
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>📸 사진을 동영상으로 변환하기</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Noto+Sans+KR:wght@400;700&display=swap');
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Noto Sans KR', sans-serif;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow-x: hidden;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(15px);
+      border-radius: 20px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+      padding: 40px;
+      width: 90%;
+      max-width: 550px;
+      text-align: center;
+      animation: fadeIn 1.2s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.8em;
+      margin-bottom: 10px;
+      color: #fff;
+    }
+
+    p {
+      font-size: 0.95em;
+      opacity: 0.8;
+      margin-bottom: 25px;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    label {
+      display: inline-block;
+      background: linear-gradient(135deg, #ff6a00, #ee0979);
+      color: white;
+      padding: 12px 25px;
+      border-radius: 50px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(255, 106, 0, 0.4);
+    }
+
+    label:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 25px rgba(255, 106, 0, 0.6);
+    }
+
+    img {
+      display: none;
+      max-width: 100%;
+      border-radius: 15px;
+      margin-top: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    button {
+      margin-top: 25px;
+      background: linear-gradient(135deg, #00c6ff, #0072ff);
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1em;
+      transition: 0.3s ease;
+      box-shadow: 0 4px 20px rgba(0,114,255,0.4);
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 25px rgba(0,114,255,0.6);
+    }
+
+    .loading {
+      display: none;
+      margin-top: 30px;
+    }
+
+    .loader {
+      border: 6px solid rgba(255,255,255,0.3);
+      border-top: 6px solid #fff;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      margin: auto;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    video {
+      display: none;
+      margin-top: 25px;
+      width: 100%;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.8em;
+      opacity: 0.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📸 사진을 동영상으로 변환하기</h1>
+    <p>이미지를 업로드하고 멋진 동영상으로 만들어보세요!</p>
+
+    <label for="fileInput">사진 업로드하기</label>
+    <input type="file" id="fileInput" accept="image/*">
+
+    <img id="preview" alt="사진 미리보기" />
+
+    <button id="convertBtn">🎬 동영상으로 변환</button>
+
+    <div class="loading" id="loading">
+      <div class="loader"></div>
+      <p>동영상으로 변환 중...</p>
+    </div>
+
+    <video id="videoResult" controls></video>
+
+    <footer>© 2025 PhotoToVideo Demo</footer>
+  </div>
+
+  <script>
+    const fileInput = document.getElementById('fileInput');
+    const preview = document.getElementById('preview');
+    const convertBtn = document.getElementById('convertBtn');
+    const loading = document.getElementById('loading');
+    const videoResult = document.getElementById('videoResult');
+
+    let selectedFile = null;
+
+    fileInput.addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (file) {
+        selectedFile = file;
+        const reader = new FileReader();
+        reader.onload = () => {
+          preview.src = reader.result;
+          preview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    convertBtn.addEventListener('click', () => {
+      if (!selectedFile) {
+        alert("먼저 사진을 업로드해주세요!");
+        return;
+      }
+
+      loading.style.display = 'block';
+      preview.style.display = 'none';
+      videoResult.style.display = 'none';
+
+      // 실제 변환 대신 가짜 로딩 후 샘플 비디오 표시
+      setTimeout(() => {
+        loading.style.display = 'none';
+        videoResult.src = "https://www.w3schools.com/html/mov_bbb.mp4"; // 샘플 비디오
+        videoResult.style.display = 'block';
+      }, 2500);
+    });
+  </script>
+</body>
+</html>
+    
+  </body>
+  
+</html>
